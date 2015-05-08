@@ -12,6 +12,7 @@ import deform
 from voteit.printable import _
 from voteit.printable.fanstaticlib import printable_css
 from voteit.printable.schemas import PrintableMeetingSchema
+from voteit.printable.schemas import proposal_states
 
 
 class PrintableMeetingForm(BaseForm):
@@ -44,6 +45,7 @@ class PrintableMeetingStructure(BaseView):
                 agenda_items.append(obj)
         response = dict(settings)
         response['agenda_items'] = agenda_items
+        response['proposal_state_titles'] = dict(proposal_states(self.request))
         return response
 
     def get_proposals(self, ai):

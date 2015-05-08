@@ -5,6 +5,7 @@ import colander
 import deform
 
 from voteit.printable import _
+from voteit.core import _ as core_ts
 
 
 @colander.deferred
@@ -27,23 +28,24 @@ def all_agenda_items_keys(node, kw):
             values.append(name)
     return values
 
-def _proposal_states():
+def proposal_states(request):
     wf = get_workflow(IProposal, 'Proposal')
     state_values = []
-    ts = _
     for info in wf._state_info(IProposal): #Public API goes through permission checker
         item = [info['name']]
-        item.append(ts(info['title']))
+        item.append(request.localizer.translate(core_ts(info['title'])))
         state_values.append(item)
     return state_values
     
 @colander.deferred
 def include_proposal_states_widget(node, kw):
-    return deform.widget.CheckboxChoiceWidget(values = _proposal_states())
+    request = kw['request']
+    return deform.widget.CheckboxChoiceWidget(values = proposal_states(request))
  
 @colander.deferred
-def all_proposal_state_ids(*args):
-    return [x[0] for x in _proposal_states()]
+def all_proposal_state_ids(node, kw):
+    request = kw['request']
+    return [x[0] for x in proposal_states(request)]
 
 
 class PrintableMeetingSchema(colander.Schema):

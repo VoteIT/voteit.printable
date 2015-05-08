@@ -35,7 +35,10 @@
         <i>${structure: request.creators_info(obj.creator, portrait = False, no_tag = True)}</i>
         ${structure: request.transform_text(obj.text, html = False)}
       </p>
-      <p>#${obj.aid}</p>
+      <p tal:define="wf_state obj.get_workflow_state()">#${obj.aid} &mdash;
+        <span class="glyphicon glyphicon-${wf_state} text-${wf_state}"></span>
+        <tal:ts replace="proposal_state_titles.get(wf_state, wf_state)" />
+      </p>
       <hr/>
     </tal:iterate>
   </tal:proposals>
