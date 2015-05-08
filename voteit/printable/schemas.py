@@ -1,10 +1,10 @@
+from repoze.workflow.workflow import get_workflow
+from voteit.core.models.interfaces import IAgendaItem
+from voteit.core.models.interfaces import IProposal
 import colander
 import deform
 
-from voteit.core import _
-from voteit.core.models.interfaces import IAgendaItem
-from repoze.workflow.workflow import get_workflow
-from voteit.core.models.interfaces import IProposal
+from voteit.printable import _
 
 
 @colander.deferred

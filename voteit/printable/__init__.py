@@ -4,4 +4,5 @@ _ = TranslationStringFactory('voteit.printable')
 
 
 def includeme(config):
+    config.add_translation_dirs('voteit.printable:locale/')
     config.include('.views')
