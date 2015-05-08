@@ -1,17 +1,17 @@
 from arche.views.base import BaseForm
+from arche.views.base import BaseView
 from arche.views.base import button_cancel
+from pyramid.decorator import reify
+from pyramid.httpexceptions import HTTPForbidden
+from pyramid.httpexceptions import HTTPFound
+from pyramid.traversal import resource_path
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.security import MODERATE_MEETING
 import deform
-from pyramid.httpexceptions import HTTPFound
-from pyramid.httpexceptions import HTTPForbidden
-from arche.views.base import BaseView
-from pyramid.decorator import reify
-from pyramid.traversal import resource_path
 
-from voteit.printable.schemas import PrintableMeetingSchema
 from voteit.printable import _
 from voteit.printable.fanstaticlib import printable_css
+from voteit.printable.schemas import PrintableMeetingSchema
 
 
 class PrintableMeetingForm(BaseForm):
@@ -24,20 +24,6 @@ class PrintableMeetingForm(BaseForm):
     def print_success(self, appstruct):
         self.request.session['%s:print_agenda_items' % (self.context.uid)] = appstruct
         return HTTPFound(location = self.request.resource_url(self.context, 'print_meeting_structure'))
-
-#
-#    include_ai_body = colander.SchemaNode(colander.Bool(),
-#                                          title = _("Include agenda item body, if any?"),
-#                                          default = True)
-#    include_proposal_states = colander.SchemaNode(colander.Set(),
-#                                                  widget = include_proposal_states_widget,
-#                                                  default = all_proposal_state_ids,
-#                                                  title = _("Include these proposal states"),
-#                                                  missing = ())
-#    include_discussion = colander.SchemaNode(colander.Bool(),
-#                                             default = False,
-#                                             title = _("Include discussion posts?"))
-
 
 
 class PrintableMeetingStructure(BaseView):
@@ -71,6 +57,7 @@ class PrintableMeetingStructure(BaseView):
         query += "and type_name == 'DiscussionPost' "
         return self.catalog_query(query, resolve = True)
 
+
 def includeme(config):
     config.add_view(PrintableMeetingForm,
                     context = IMeeting,
@@ -82,4 +69,3 @@ def includeme(config):
                     name = 'print_meeting_structure',
                     permission = MODERATE_MEETING,
                     renderer = 'voteit.printable:templates/meeting_structure.pt')
-                    #renderer = '')
