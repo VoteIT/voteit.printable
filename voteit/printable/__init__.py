@@ -1,4 +1,7 @@
+from pyramid.i18n import TranslationStringFactory
+
+_ = TranslationStringFactory('voteit.printable')
 
 
 def includeme(config):
-    pass
+    config.include('.views')

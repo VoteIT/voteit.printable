@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.printable">
+<head></head>
+<body>
+<div class="hidden-print">
+  <h1 i18n:translate="">
+    <span i18n:name="num" tal:content="len(agenda_items)" />
+    agenda items selected
+  </h1>
+  <div i18n:translate="">
+      Each agenda item will be printed on its own page. These controls won't be printed.
+  </div>
+  <a href="javascript:window.print()" class="btn btn-primary">Print</a>
+  <a href="${request.resource_url(context)}" class="btn btn-default">Back</a>
+</div>
+<tal:iterate repeat="ai agenda_items">
+  <div class="page-header">
+    <h1>${ai.title}</h1>
+  </div>
+
+  <div tal:condition="include_ai_body and ai.description">${structure: ai.description}</div>
+
+  <tal:proposals condition="include_proposal_states and proposals" define="proposals tuple(view.get_proposals(ai))">
+    <div class="page-header">
+      <h2 i18n:translate="">
+        <tal:ts i18n:translate="">Proposals</tal:ts>
+        <small>(${len(proposals)})</small>
+      </h2>
+    </div>
+    <tal:iterate repeat="obj proposals">
+      <p>
+        <i>${structure: request.creators_info(obj.creator, portrait = False, no_tag = True)}</i>
+        ${structure: request.transform_text(obj.text, html = False)}
+      </p>
+      <p>#${obj.aid}</p>
+      <hr/>
+    </tal:iterate>
+  </tal:proposals>
+
+  <tal:discussion condition="include_discussion and discussion" define="discussion tuple(view.get_discussion(ai))">
+    <div class="page-header">
+      <h2>
+        <tal:ts i18n:translate="">Discussion</tal:ts>
+        <small>(${len(discussion)})</small>
+      </h2>
+    </div>
+    <tal:iterate repeat="obj discussion">
+      <p>
+        <i>${structure: request.creators_info(obj.creator, portrait = False, no_tag = True)}</i>
+        ${structure: request.transform_text(obj.text, html = False)}
+      </p>      
+      <hr/>
+    </tal:iterate>
+  </tal:discussion>
+
+  <div class="page-break"><!-- --></div>
+
+</tal:iterate>
+</body>
+</html>
