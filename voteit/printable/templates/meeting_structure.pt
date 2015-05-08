@@ -25,7 +25,7 @@
 
   <tal:proposals condition="include_proposal_states and proposals" define="proposals tuple(view.get_proposals(ai))">
     <div class="page-header">
-      <h2 i18n:translate="">
+      <h2>
         <tal:ts i18n:translate="">Proposals</tal:ts>
         <small>(${len(proposals)})</small>
       </h2>

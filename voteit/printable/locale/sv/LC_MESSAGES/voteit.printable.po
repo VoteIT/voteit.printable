@@ -1,0 +1,62 @@
+#
+# Swedish translations for PACKAGE package
+# This file is distributed under the same license as the PACKAGE package.
+# Robin Harms Oredsson <>, 2015.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE 1.0\n"
+"POT-Creation-Date: 2015-05-08 13:40+0200\n"
+"PO-Revision-Date: 2015-05-08 13:39+0100\n"
+"Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
+"Language-Team: Swedish\n"
+"Language: sv\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Lingua 3.9\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.6.9\n"
+
+#: voteit/printable/schemas.py:50
+msgid "Print meeting"
+msgstr "Skriv ut möte"
+
+#: voteit/printable/schemas.py:52
+msgid "Select agenda items"
+msgstr "Välj dagordningspunkter"
+
+#: voteit/printable/schemas.py:56
+msgid "Include agenda item body, if any?"
+msgstr "Ta med dagordningspunktens brödtext, om den finns?"
+
+#: voteit/printable/schemas.py:61
+msgid "Include these proposal states"
+msgstr "Ta med förslag i följande tillstånd"
+
+#: voteit/printable/schemas.py:65
+msgid "Include discussion posts?"
+msgstr "Ta med diskussioner?"
+
+#: voteit/printable/views.py:19
+msgid "Create print view"
+msgstr "Skapa printvy"
+
+#: voteit/printable/templates/meeting_structure.pt:9
+msgid "${num} agenda items selected"
+msgstr "${num} dagordningspunkter valda"
+
+#: voteit/printable/templates/meeting_structure.pt:13
+msgid ""
+"Each agenda item will be printed on its own page. These controls won't be "
+"printed."
+msgstr ""
+"Varje dagordningspunkt kommer skrivas ut på sin egen sida. De här "
+"kontrollerna kommer inte skrivas ut."
+
+#: voteit/printable/templates/meeting_structure.pt:29
+msgid "Proposals"
+msgstr "Förslag"
+
+#: voteit/printable/templates/meeting_structure.pt:46
+msgid "Discussion"
+msgstr "Diskussion"
