@@ -48,16 +48,16 @@ class PrintableMeetingStructure(BaseView):
         response['proposal_state_titles'] = dict(proposal_states(self.request))
         return response
 
-    def get_proposals(self, ai):
+    def get_proposals(self, ai, state):
         query = "path == '%s' " % resource_path(ai)
         query += "and type_name == 'Proposal' "
-        query += "and workflow_state in any(%s)" % list(self.settings.get('include_proposal_states', ()))
-        return self.catalog_query(query, resolve = True)
+        query += "and workflow_state == '%s'" % state
+        return tuple(self.catalog_query(query, resolve = True, sort_index = 'created'))
 
     def get_discussion(self, ai):
         query = "path == '%s' " % resource_path(ai)
         query += "and type_name == 'DiscussionPost' "
-        return self.catalog_query(query, resolve = True)
+        return tuple(self.catalog_query(query, resolve = True, sort_index = 'created'))
 
 
 def includeme(config):

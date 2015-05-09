@@ -23,27 +23,34 @@
 
   <div tal:condition="include_ai_body and ai.description">${structure: ai.description}</div>
 
-  <tal:proposals condition="include_proposal_states and proposals" define="proposals tuple(view.get_proposals(ai))">
-    <div class="page-header">
-      <h2>
-        <tal:ts i18n:translate="">Proposals</tal:ts>
-        <small>(${len(proposals)})</small>
-      </h2>
-    </div>
-    <tal:iterate repeat="obj proposals">
-      <p>
-        <i>${structure: request.creators_info(obj.creator, portrait = False, no_tag = True)}</i>
-        ${structure: request.transform_text(obj.text, html = False)}
-      </p>
-      <p tal:define="wf_state obj.get_workflow_state()">#${obj.aid} &mdash;
-        <span class="glyphicon glyphicon-${wf_state} text-${wf_state}"></span>
-        <tal:ts replace="proposal_state_titles.get(wf_state, wf_state)" />
-      </p>
-      <hr/>
-    </tal:iterate>
-  </tal:proposals>
+  <tal:states repeat="state include_proposal_states">
+    <tal:proposals define="proposals view.get_proposals(ai, state)">
+      <tal:has_props tal:condition="proposals">
+      <div class="page-header">
+        <h2>
+          <tal:ts i18n:translate="">
+            Proposals:
+          </tal:ts>
+          ${proposal_state_titles.get(state, state)}
+          <small>(${len(proposals)})</small>
+        </h2>
+      </div>
+      <tal:iterate repeat="obj proposals">
+        <p>
+          <i>${structure: request.creators_info(obj.creator, portrait = False, no_tag = True)}</i>
+          ${structure: request.transform_text(obj.text, html = False)}
+        </p>
+        <p tal:define="wf_state obj.get_workflow_state()">#${obj.aid} &mdash;
+          <span class="glyphicon glyphicon-${wf_state} text-${wf_state}"></span>
+          <tal:ts replace="proposal_state_titles.get(wf_state, wf_state)" />
+        </p>
+        <hr/>
+      </tal:iterate>
+      </tal:has_props>
+    </tal:proposals>
+  </tal:states>
 
-  <tal:discussion condition="include_discussion and discussion" define="discussion tuple(view.get_discussion(ai))">
+  <tal:discussion condition="include_discussion and discussion" define="discussion view.get_discussion(ai)">
     <div class="page-header">
       <h2>
         <tal:ts i18n:translate="">Discussion</tal:ts>
