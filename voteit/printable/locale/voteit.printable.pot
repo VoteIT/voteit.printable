@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2015-05-08 15:04+0200\n"
+"POT-Creation-Date: 2015-05-09 22:09+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,27 +16,27 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Lingua 3.9\n"
 
-#: ././voteit/printable/schemas.py:50
+#: ././voteit/printable/schemas.py:52
 msgid "Print meeting"
 msgstr ""
 
-#: ././voteit/printable/schemas.py:52
+#: ././voteit/printable/schemas.py:54
 msgid "Select agenda items"
 msgstr ""
 
-#: ././voteit/printable/schemas.py:56
+#: ././voteit/printable/schemas.py:58
 msgid "Include agenda item body, if any?"
 msgstr ""
 
-#: ././voteit/printable/schemas.py:61
+#: ././voteit/printable/schemas.py:63
 msgid "Include these proposal states"
 msgstr ""
 
-#: ././voteit/printable/schemas.py:65
+#: ././voteit/printable/schemas.py:67
 msgid "Include discussion posts?"
 msgstr ""
 
-#: ././voteit/printable/views.py:19
+#: ././voteit/printable/views.py:20
 msgid "Create print view"
 msgstr ""
 
@@ -50,10 +50,10 @@ msgid ""
 "printed."
 msgstr ""
 
-#: ././voteit/printable/templates/meeting_structure.pt:29
-msgid "Proposals"
+#: ././voteit/printable/templates/meeting_structure.pt:31
+msgid "Proposals:"
 msgstr ""
 
-#: ././voteit/printable/templates/meeting_structure.pt:46
+#: ././voteit/printable/templates/meeting_structure.pt:56
 msgid "Discussion"
 msgstr ""

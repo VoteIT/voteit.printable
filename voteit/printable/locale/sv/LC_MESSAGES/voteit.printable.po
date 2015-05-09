@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2015-05-08 15:04+0200\n"
-"PO-Revision-Date: 2015-05-08 13:39+0100\n"
+"POT-Creation-Date: 2015-05-09 22:09+0200\n"
+"PO-Revision-Date: 2015-05-09 22:09+0100\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: Swedish\n"
 "Language: sv\n"
@@ -17,27 +17,27 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 1.6.9\n"
 
-#: voteit/printable/schemas.py:50
+#: voteit/printable/schemas.py:52
 msgid "Print meeting"
 msgstr "Skriv ut möte"
 
-#: voteit/printable/schemas.py:52
+#: voteit/printable/schemas.py:54
 msgid "Select agenda items"
 msgstr "Välj dagordningspunkter"
 
-#: voteit/printable/schemas.py:56
+#: voteit/printable/schemas.py:58
 msgid "Include agenda item body, if any?"
 msgstr "Ta med dagordningspunktens brödtext, om den finns?"
 
-#: voteit/printable/schemas.py:61
+#: voteit/printable/schemas.py:63
 msgid "Include these proposal states"
 msgstr "Ta med förslag i följande tillstånd"
 
-#: voteit/printable/schemas.py:65
+#: voteit/printable/schemas.py:67
 msgid "Include discussion posts?"
 msgstr "Ta med diskussioner?"
 
-#: voteit/printable/views.py:19
+#: voteit/printable/views.py:20
 msgid "Create print view"
 msgstr "Skapa printvy"
 
@@ -53,10 +53,10 @@ msgstr ""
 "Varje dagordningspunkt kommer skrivas ut på sin egen sida. De här "
 "kontrollerna kommer inte skrivas ut."
 
-#: voteit/printable/templates/meeting_structure.pt:29
-msgid "Proposals"
-msgstr "Förslag"
+#: voteit/printable/templates/meeting_structure.pt:31
+msgid "Proposals:"
+msgstr "Förslag:"
 
-#: voteit/printable/templates/meeting_structure.pt:46
+#: voteit/printable/templates/meeting_structure.pt:56
 msgid "Discussion"
 msgstr "Diskussion"
