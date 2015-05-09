@@ -1,3 +1,13 @@
-body { font-size: 14pt; }
+body {
+  font-size: 14pt;
+  padding: 0px;
+}
+hr {
+  margin-top: 10px;
+}
+.page-header {
+  padding-bottom: 5px;
+  margin: 0.25em 0 0.5em;
+}
 @page { margin: 1cm; }
 .page-break { page-break-after: always; }
