@@ -13,6 +13,7 @@ from voteit.printable import _
 from voteit.printable.fanstaticlib import printable_css
 from voteit.printable.schemas import PrintableMeetingSchema
 from voteit.printable.schemas import proposal_states
+from webhelpers.html.converters import nl2br
 
 
 class PrintableMeetingForm(BaseForm):
@@ -33,11 +34,15 @@ class PrintableMeetingStructure(BaseView):
     def settings(self):
         return self.request.session.get('%s:print_agenda_items' % (self.context.uid), {})
 
+    def nl2br(self, text):
+        return unicode(nl2br(text))
+
     def __call__(self):
         printable_css.need()
         settings = self.settings
         if not settings:
-            raise HTTPForbidden("Nothing to do")
+            self.flash_messages.add(_("Pick what to print"))
+            return HTTPFound(location = self.request.resource_url(self.context, 'print_meeting_structure_form'))
         agenda_items = []
         for name in settings.get('agenda_items', ()):
             obj = self.context.get(name, None)
