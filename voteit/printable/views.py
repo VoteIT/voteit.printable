@@ -44,10 +44,12 @@ class PrintableMeetingStructure(BaseView):
             self.flash_messages.add(_("Pick what to print"))
             return HTTPFound(location = self.request.resource_url(self.context, 'print_meeting_structure_form'))
         agenda_items = []
-        for name in settings.get('agenda_items', ()):
-            obj = self.context.get(name, None)
-            if obj:
-                agenda_items.append(obj)
+        ai_names = settings.get('agenda_items', ())
+        for name in self.context.keys():
+            if name in ai_names:
+                obj = self.context.get(name, None)
+                if obj:
+                    agenda_items.append(obj)
         response = dict(settings)
         response['agenda_items'] = agenda_items
         response['proposal_state_titles'] = dict(proposal_states(self.request))
