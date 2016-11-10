@@ -2,18 +2,17 @@ from arche.views.base import BaseForm
 from arche.views.base import BaseView
 from arche.views.base import button_cancel
 from pyramid.decorator import reify
-from pyramid.httpexceptions import HTTPForbidden
 from pyramid.httpexceptions import HTTPFound
 from pyramid.traversal import resource_path
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.security import MODERATE_MEETING
+from webhelpers.html.converters import nl2br
 import deform
 
 from voteit.printable import _
 from voteit.printable.fanstaticlib import printable_css
 from voteit.printable.schemas import PrintableMeetingSchema
 from voteit.printable.schemas import proposal_states
-from webhelpers.html.converters import nl2br
 
 
 class PrintableMeetingForm(BaseForm):
@@ -25,6 +24,7 @@ class PrintableMeetingForm(BaseForm):
 
     def print_success(self, appstruct):
         self.request.session['%s:print_agenda_items' % (self.context.uid)] = appstruct
+        self.request.session.changed()
         return HTTPFound(location = self.request.resource_url(self.context, 'print_meeting_structure'))
 
 
