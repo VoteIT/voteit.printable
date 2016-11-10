@@ -1,6 +1,7 @@
 from arche.views.base import BaseForm
 from arche.views.base import BaseView
 from arche.views.base import button_cancel
+from betahaus.viewcomponent import view_action
 from pyramid.decorator import reify
 from pyramid.httpexceptions import HTTPFound
 from pyramid.traversal import resource_path
@@ -67,6 +68,17 @@ class PrintableMeetingStructure(BaseView):
         return tuple(self.catalog_query(query, resolve = True, sort_index = 'created'))
 
 
+@view_action('actions_menu', 'print_meeting_structure',
+             title=_("Print meeting"),
+             priority=30,
+             permission=MODERATE_MEETING)
+def print_meeting_structure_action(context, request, va, **kw):
+    if getattr(request, 'meeting', False):
+        return """<li><a href="%(url)s">%(title)s</a></li>""" % \
+               {'url': request.resource_url(request.meeting, 'print_meeting_structure_form'),
+                'title': request.localizer.translate(va.title)}
+
+
 def includeme(config):
     config.add_view(PrintableMeetingForm,
                     context = IMeeting,
@@ -78,3 +90,4 @@ def includeme(config):
                     name = 'print_meeting_structure',
                     permission = MODERATE_MEETING,
                     renderer = 'voteit.printable:templates/meeting_structure.pt')
+    config.scan(__name__)
