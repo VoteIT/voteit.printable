@@ -19,7 +19,7 @@
 <tal:iterate repeat="ai agenda_items">
   <h1 class="page-header">${ai.title}</h1>
 
-  <div tal:condition="include_ai_body and ai.description">${structure: ai.description}</div>
+  <div tal:condition="include_ai_body and ai.body">${structure: ai.body}</div>
 
   <tal:states repeat="state include_proposal_states">
     <tal:proposals define="proposals view.get_proposals(ai, state)">
