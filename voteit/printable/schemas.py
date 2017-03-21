@@ -1,3 +1,4 @@
+from pyramid.i18n import TranslationString
 from repoze.workflow.workflow import get_workflow
 from voteit.core.models.interfaces import IAgendaItem
 from voteit.core.models.interfaces import IProposal
@@ -6,6 +7,7 @@ import deform
 
 from voteit.printable import _
 from voteit.core import _ as core_ts
+from voteit.printable.models import get_printable_views
 
 
 @colander.deferred
@@ -51,6 +53,27 @@ def all_proposal_state_ids(node, kw):
     return [x[0] for x in proposal_states(request)]
 
 
+@colander.deferred
+def printable_renderer_widget(node, kw):
+    request = kw['request']
+    values = []
+    for (k, v) in get_printable_views(request.registry).items():
+        title = getattr(v, 'title', v.__name__)
+        if isinstance(title, TranslationString):
+            title = request.localizer.translate(title)
+        values.append((k, title))
+    if len(values) == 1:
+        return deform.widget.HiddenWidget()
+    else:
+        return deform.widget.SelectWidget(values=values)
+
+
+@colander.deferred
+def printable_renderer_paths_validator(node, kw):
+    request = kw['request']
+    return colander.OneOf(list(get_printable_views(request.registry)))
+
+
 class PrintableMeetingSchema(colander.Schema):
     title = _("Print meeting")
     agenda_items = colander.SchemaNode(
@@ -76,3 +99,21 @@ class PrintableMeetingSchema(colander.Schema):
         default=False,
         title=_("Include discussion posts?"),
     )
+    show_states = colander.SchemaNode(
+        colander.Bool(),
+        title=_("Show proposal states"),
+        description=_("If the used template supports this"),
+        default=True,
+    )
+    renderer = colander.SchemaNode(
+        colander.String(),
+        title = _("View to render the result (advanced)"),
+        description = _("The default will produce a printable webpage."),
+        default = 'print_meeting_structure',
+        widget = printable_renderer_widget,
+        validator = printable_renderer_paths_validator,
+    )
+
+
+def includeme(config):
+    pass
