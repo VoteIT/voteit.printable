@@ -99,10 +99,13 @@ class XMLExportMeetingView(DefaultPrintMeeting):
         clear_needed()
         return Response(output, content_type = 'text/xml')
 
-    def cleanup(self, text, html=True):
+    def cleanup(self, text, html=True, trim=True):
         if html:
             text = strip_tags(text)
-        return self.unescape(text)
+        text = self.unescape(text)
+        if trim:
+            text = "\n".join([x.strip() for x in text.splitlines()])
+        return text
 
     def export_xml(self, values):
         proposal_state_titles = values['proposal_state_titles']
