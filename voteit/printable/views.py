@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from HTMLParser import HTMLParser
 from xml.etree.ElementTree import Element
 from xml.etree.ElementTree import SubElement
@@ -140,7 +141,10 @@ class XMLExportMeetingView(DefaultPrintMeeting):
                 creators.text = self.request.creators_info(obj.creator, portrait = False, no_tag = True).strip()
                 text = SubElement(discussion_post, 'text')
                 text.text = obj.text
-        return tostring(root)
+        body = """<?xml version="1.0" encoding="UTF-8" ?>\n"""
+        body += tostring(root)
+        return body
+
 
 #FIXME:
 #class JSONPrintMeeting(DefaultPrintMeeting):
