@@ -110,41 +110,62 @@ class XMLExportMeetingView(DefaultPrintMeeting):
 
     def export_xml(self, values):
         proposal_state_titles = values['proposal_state_titles']
-        root = Element('root')
+        root = Element('Root')
+        root.set('xmlns', 'http://voteit.se/printable')
+        root.set('xmlns:AgendaItem', 'http://voteit.se/printable/AgendaItem')
+        root.set('xmlns:Proposal', 'http://voteit.se/printable/Proposal')
+        root.set('xmlns:DiscussionPost', 'http://voteit.se/printable/DiscussionPost')
         for ai in values['agenda_items']:
             ai_elem = SubElement(root, 'AgendaItem')
-            title = SubElement(ai_elem, 'title')
+            title = SubElement(ai_elem, 'AgendaItem:title')
             title.text = ai.title
-            body = SubElement(ai_elem, 'body')
+            body = SubElement(ai_elem, 'AgendaItem:body')
             body.text = self.cleanup(ai.body)
+            hashtag = SubElement(ai_elem, 'AgendaItem:hashtag')
+            hashtag.text = ai.hashtag
+            #Append support, if any
+            self.append_support(ai, ai_elem)
             #Proposals
             proposals = SubElement(ai_elem, 'Proposals')
             for obj in self.get_proposals(ai):
                 proposal = SubElement(proposals, 'Proposal')
                 #Attributes
-                creators = SubElement(proposal, 'creators')
+                creators = SubElement(proposal, 'Proposal:creators')
                 creators.text = self.request.creators_info(obj.creator, portrait = False, no_tag = True).strip()
-                text = SubElement(proposal, 'text')
+                text = SubElement(proposal, 'Proposal:text')
                 text.text = obj.text
-                aid = SubElement(proposal, 'aid')
+                aid = SubElement(proposal, 'Proposal:aid')
                 aid.text = obj.aid
-                state = SubElement(proposal, 'state')
+                state = SubElement(proposal, 'Proposal:state')
                 wf_state = obj.get_workflow_state()
                 state.text = proposal_state_titles.get(wf_state, wf_state)
         #Discussion
-        if self.settings.get('include_discussion', None):
-            discussion_posts = SubElement(ai_elem, 'DiscussionPosts')
-            for obj in self.get_discussion(ai):
-                discussion_post = SubElement(discussion_posts, 'DiscussionPost')
-                #Attributes
-                creators = SubElement(discussion_post, 'creators')
-                creators.text = self.request.creators_info(obj.creator, portrait = False, no_tag = True).strip()
-                text = SubElement(discussion_post, 'text')
-                text.text = obj.text
+        discussion_posts = SubElement(ai_elem, 'DiscussionPosts')
+        for obj in self.get_discussion(ai):
+            discussion_post = SubElement(discussion_posts, 'DiscussionPost')
+            #Attributes
+            creators = SubElement(discussion_post, 'DiscussionPost:creators')
+            creators.text = self.request.creators_info(obj.creator, portrait = False, no_tag = True).strip()
+            text = SubElement(discussion_post, 'DiscussionPost:text')
+            text.text = obj.text
         body = """<?xml version="1.0" encoding="UTF-8" ?>\n"""
         body += tostring(root)
         return body
 
+    def append_support(self, ai, elem):
+        #Note, this may change in voteit.motion
+        #Keep track of those changes
+        if not getattr(ai, 'motion_uid', False):
+            return
+        motion = self.request.resolve_uid(ai.motion_uid)
+        if not motion:
+            return
+        endorsements = SubElement(elem, 'AgendaItem:endorsements')
+        for userid in motion.endorsements:
+            user_elem = SubElement(endorsements, 'AgendaItem:endorsing_user')
+            user_elem.text = self.request.creators_info([userid], portrait=False, no_tag=True).strip()
+        endorsements_text = SubElement(elem, 'AgendaItem:endorsements_text')
+        endorsements_text.text = self.cleanup(motion.endorsements_text)
 
 #FIXME:
 #class JSONPrintMeeting(DefaultPrintMeeting):
