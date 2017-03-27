@@ -112,16 +112,13 @@ class XMLExportMeetingView(DefaultPrintMeeting):
         proposal_state_titles = values['proposal_state_titles']
         root = Element('Root')
         root.set('xmlns', 'http://voteit.se/printable')
-        root.set('xmlns:AgendaItem', 'http://voteit.se/printable/AgendaItem')
-        root.set('xmlns:Proposal', 'http://voteit.se/printable/Proposal')
-        root.set('xmlns:DiscussionPost', 'http://voteit.se/printable/DiscussionPost')
         for ai in values['agenda_items']:
             ai_elem = SubElement(root, 'AgendaItem')
-            title = SubElement(ai_elem, 'AgendaItem:title')
+            title = SubElement(ai_elem, 'AgendaItem_title')
             title.text = ai.title
-            body = SubElement(ai_elem, 'AgendaItem:body')
+            body = SubElement(ai_elem, 'AgendaItem_body')
             body.text = self.cleanup(ai.body)
-            hashtag = SubElement(ai_elem, 'AgendaItem:hashtag')
+            hashtag = SubElement(ai_elem, 'AgendaItem_hashtag')
             hashtag.text = ai.hashtag
             #Append motion information, if it was created from a motion
             self.append_motion_details(ai, ai_elem)
@@ -130,13 +127,13 @@ class XMLExportMeetingView(DefaultPrintMeeting):
             for obj in self.get_proposals(ai):
                 proposal = SubElement(proposals, 'Proposal')
                 #Attributes
-                creator = SubElement(proposal, 'Proposal:creator')
+                creator = SubElement(proposal, 'Proposal_creator')
                 creator.text = self.request.creators_info(obj.creator, portrait = False, no_tag = True).strip()
-                text = SubElement(proposal, 'Proposal:text')
+                text = SubElement(proposal, 'Proposal_text')
                 text.text = obj.text
-                aid = SubElement(proposal, 'Proposal:aid')
+                aid = SubElement(proposal, 'Proposal_aid')
                 aid.text = obj.aid
-                state = SubElement(proposal, 'Proposal:state')
+                state = SubElement(proposal, 'Proposal_state')
                 wf_state = obj.get_workflow_state()
                 state.text = proposal_state_titles.get(wf_state, wf_state)
         #Discussion
@@ -144,9 +141,9 @@ class XMLExportMeetingView(DefaultPrintMeeting):
         for obj in self.get_discussion(ai):
             discussion_post = SubElement(discussion_posts, 'DiscussionPost')
             #Attributes
-            creator = SubElement(discussion_post, 'DiscussionPost:creator')
+            creator = SubElement(discussion_post, 'DiscussionPost_creator')
             creator.text = self.request.creators_info(obj.creator, portrait = False, no_tag = True).strip()
-            text = SubElement(discussion_post, 'DiscussionPost:text')
+            text = SubElement(discussion_post, 'DiscussionPost_text')
             text.text = obj.text
         body = """<?xml version="1.0" encoding="UTF-8" ?>\n"""
         body += tostring(root)
@@ -160,13 +157,13 @@ class XMLExportMeetingView(DefaultPrintMeeting):
         motion = self.request.resolve_uid(ai.motion_uid)
         if not motion:
             return
-        creator = SubElement(elem, 'AgendaItem:motion_creator')
+        creator = SubElement(elem, 'AgendaItem_motion_creator')
         creator.text = self.request.creators_info(motion.creator, portrait=False, no_tag=True).strip()
-        endorsements = SubElement(elem, 'AgendaItem:endorsements')
+        endorsements = SubElement(elem, 'AgendaItem_endorsements')
         for userid in motion.endorsements:
-            user_elem = SubElement(endorsements, 'AgendaItem:endorsing_user')
+            user_elem = SubElement(endorsements, 'AgendaItem_endorsing_user')
             user_elem.text = self.request.creators_info([userid], portrait=False, no_tag=True).strip()
-        endorsements_text = SubElement(elem, 'AgendaItem:endorsements_text')
+        endorsements_text = SubElement(elem, 'AgendaItem_endorsements_text')
         endorsements_text.text = self.cleanup(motion.endorsements_text)
 
 #FIXME:
