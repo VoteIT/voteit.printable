@@ -137,7 +137,10 @@ class XMLExportMeetingView(DefaultPrintMeeting):
                 text = SubElement(proposal, 'Proposal_text')
                 text.text = obj.text
                 aid = SubElement(proposal, 'Proposal_aid')
-                aid.text = obj.aid
+                if self.settings['hashtag_number_only']:
+                    aid.text = str(obj.aid_int)
+                else:
+                    aid.text = obj.aid
                 state = SubElement(proposal, 'Proposal_state')
                 wf_state = obj.get_workflow_state()
                 state.text = proposal_state_titles.get(wf_state, wf_state)

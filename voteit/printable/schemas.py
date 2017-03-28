@@ -110,6 +110,11 @@ class PrintableMeetingSchema(colander.Schema):
         title=_("Hide userids?"),
         default=False,
     )
+    hashtag_number_only = colander.SchemaNode(
+        colander.Bool(),
+        title=_("Only show hashtag number (XML)?"),
+        default=False,
+    )
     renderer = colander.SchemaNode(
         colander.String(),
         title = _("View to render the result (advanced)"),
