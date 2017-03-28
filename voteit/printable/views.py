@@ -145,15 +145,15 @@ class XMLExportMeetingView(DefaultPrintMeeting):
                 state = SubElement(proposal, 'Proposal_state')
                 wf_state = obj.get_workflow_state()
                 state.text = proposal_state_titles.get(wf_state, wf_state)
-        #Discussion
-        discussion_posts = SubElement(ai_elem, 'DiscussionPosts')
-        for obj in self.get_discussion(ai):
-            discussion_post = SubElement(discussion_posts, 'DiscussionPost')
-            #Attributes
-            creator = SubElement(discussion_post, 'DiscussionPost_creator')
-            creator.text = self._creators_info(obj.creator)
-            text = SubElement(discussion_post, 'DiscussionPost_text')
-            text.text = obj.text
+            #Discussion
+            discussion_posts = SubElement(ai_elem, 'DiscussionPosts')
+            for obj in self.get_discussion(ai):
+                discussion_post = SubElement(discussion_posts, 'DiscussionPost')
+                #Attributes
+                creator = SubElement(discussion_post, 'DiscussionPost_creator')
+                creator.text = self._creators_info(obj.creator)
+                text = SubElement(discussion_post, 'DiscussionPost_text')
+                text.text = obj.text
         body = """<?xml version="1.0" encoding="UTF-8" ?>\n"""
         body += tostring(root)
         return body
