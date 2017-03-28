@@ -13,8 +13,9 @@ from pyramid.decorator import reify
 from pyramid.httpexceptions import HTTPFound
 from pyramid.httpexceptions import HTTPException
 from pyramid.response import Response
-from pyramid.traversal import resource_path
 from voteit.core.models.interfaces import IMeeting
+from voteit.core.models.interfaces import IProposal
+from voteit.core.models.interfaces import IDiscussionPost
 from voteit.core.security import MODERATE_MEETING
 from webhelpers.html.converters import nl2br
 from webhelpers.html.tools import strip_tags
@@ -72,16 +73,16 @@ class DefaultPrintMeeting(BaseView):
         return agenda_items
 
     def get_proposals(self, ai, state=None):
-        query = "path == '%s' " % resource_path(ai)
-        query += "and type_name == 'Proposal' "
-        if state:
-            query += "and workflow_state == '%s'" % state
-        return tuple(self.catalog_query(query, resolve = True, sort_index = 'created'))
+        for obj in ai.values():
+            if IProposal.providedBy(obj):
+                if state and state != obj.get_workflow_state():
+                    continue
+                yield obj
 
     def get_discussion(self, ai):
-        query = "path == '%s' " % resource_path(ai)
-        query += "and type_name == 'DiscussionPost' "
-        return tuple(self.catalog_query(query, resolve = True, sort_index = 'created'))
+        for obj in ai.values():
+            if IDiscussionPost.providedBy(obj):
+                yield obj
 
 
 class XMLExportMeetingView(DefaultPrintMeeting):
