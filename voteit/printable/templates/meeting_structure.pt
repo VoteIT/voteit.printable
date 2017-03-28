@@ -33,7 +33,7 @@
       </h2>
       <tal:iterate repeat="obj proposals">
         <p>
-          <i>${structure: request.creators_info(obj.creator, portrait = False, no_tag = True)}</i>
+          <i>${structure: request.creators_info(obj.creator, portrait = False, no_tag = True, no_userid=no_userid)}</i>
           ${structure: view.nl2br(obj.text)}
         </p>
         <p tal:define="wf_state obj.get_workflow_state()">#${obj.aid} &mdash;
@@ -53,7 +53,7 @@
     </h2>
     <tal:iterate repeat="obj discussion">
       <p>
-        <i>${structure: request.creators_info(obj.creator, portrait = False, no_tag = True)}</i>
+        <i>${structure: request.creators_info(obj.creator, portrait=False, no_tag=True, no_userid=no_userid)}</i>
         ${structure: view.nl2br(obj.text)}
       </p>      
       <hr/>

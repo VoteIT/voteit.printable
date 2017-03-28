@@ -58,6 +58,7 @@ class DefaultPrintMeeting(BaseView):
         response = dict(settings)
         response['agenda_items'] = self.get_agenda_items()
         response['proposal_state_titles'] = dict(proposal_states(self.request))
+        response['no_userid'] = settings['no_userid']
         return response
 
     def get_agenda_items(self):
@@ -108,6 +109,10 @@ class XMLExportMeetingView(DefaultPrintMeeting):
             text = "\n".join([x.strip() for x in text.splitlines()])
         return text
 
+    def _creators_info(self, creator):
+        return self.request.creators_info(creator, portrait = False, no_tag = True,
+                                          no_userid=self.settings['no_userid']).strip()
+
     def export_xml(self, values):
         proposal_state_titles = values['proposal_state_titles']
         root = Element('Root')
@@ -128,7 +133,7 @@ class XMLExportMeetingView(DefaultPrintMeeting):
                 proposal = SubElement(proposals, 'Proposal')
                 #Attributes
                 creator = SubElement(proposal, 'Proposal_creator')
-                creator.text = self.request.creators_info(obj.creator, portrait = False, no_tag = True).strip()
+                creator.text = self._creators_info(obj.creator)
                 text = SubElement(proposal, 'Proposal_text')
                 text.text = obj.text
                 aid = SubElement(proposal, 'Proposal_aid')
@@ -142,7 +147,7 @@ class XMLExportMeetingView(DefaultPrintMeeting):
             discussion_post = SubElement(discussion_posts, 'DiscussionPost')
             #Attributes
             creator = SubElement(discussion_post, 'DiscussionPost_creator')
-            creator.text = self.request.creators_info(obj.creator, portrait = False, no_tag = True).strip()
+            creator.text = self._creators_info(obj.creator)
             text = SubElement(discussion_post, 'DiscussionPost_text')
             text.text = obj.text
         body = """<?xml version="1.0" encoding="UTF-8" ?>\n"""
@@ -158,11 +163,11 @@ class XMLExportMeetingView(DefaultPrintMeeting):
         if not motion:
             return
         creator = SubElement(elem, 'AgendaItem_motion_creator')
-        creator.text = self.request.creators_info(motion.creator, portrait=False, no_tag=True).strip()
+        creator.text = self._creators_info(motion.creator)
         endorsements = SubElement(elem, 'AgendaItem_endorsements')
         for userid in motion.endorsements:
             user_elem = SubElement(endorsements, 'AgendaItem_endorsing_user')
-            user_elem.text = self.request.creators_info([userid], portrait=False, no_tag=True).strip()
+            user_elem.text = self._creators_info([userid])
         endorsements_text = SubElement(elem, 'AgendaItem_endorsements_text')
         endorsements_text.text = self.cleanup(motion.endorsements_text)
 

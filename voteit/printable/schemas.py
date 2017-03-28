@@ -105,6 +105,11 @@ class PrintableMeetingSchema(colander.Schema):
         description=_("If the used template supports this"),
         default=True,
     )
+    no_userid = colander.SchemaNode(
+        colander.Bool(),
+        title=_("Hide userids?"),
+        default=False,
+    )
     renderer = colander.SchemaNode(
         colander.String(),
         title = _("View to render the result (advanced)"),
