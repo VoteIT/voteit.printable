@@ -4,66 +4,52 @@ from xml.etree.ElementTree import Element
 from xml.etree.ElementTree import SubElement
 from xml.etree.ElementTree import tostring
 
+import deform
 from arche.views.base import BaseForm
-from arche.views.base import BaseView
 from arche.views.base import button_cancel
-from betahaus.viewcomponent import view_action
 from fanstatic import clear_needed
 from pyramid.decorator import reify
-from pyramid.httpexceptions import HTTPFound
-from pyramid.httpexceptions import HTTPException
+from pyramid.renderers import render
 from pyramid.response import Response
 from pyramid.traversal import resource_path
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.security import MODERATE_MEETING
+from voteit.core.views.control_panel import control_panel_category
+from voteit.core.views.control_panel import control_panel_link
 from webhelpers.html.converters import nl2br
 from webhelpers.html.tools import strip_tags
-import deform
 
 from voteit.printable import _
 from voteit.printable.fanstaticlib import printable_css
-from voteit.printable.schemas import PrintableMeetingSchema
 from voteit.printable.schemas import proposal_states
 
 
-class PrintableMeetingForm(BaseForm):
-    
-    buttons = (deform.Button('print', title = _("Create print view")), button_cancel)
-
-    def get_schema(self):
-        return PrintableMeetingSchema()
-
-    def print_success(self, appstruct):
-        self.request.session['%s:print_agenda_items' % (self.context.uid)] = appstruct
-        self.request.session.changed()
-        return HTTPFound(location = self.request.resource_url(self.context, appstruct['renderer']))
-
-
-class DefaultPrintMeeting(BaseView):
+class HTMLPrintMeetingForm(BaseForm):
     title = _("Printable HTML (default)")
-
-    @reify
-    def settings(self):
-        return self.request.session.get('%s:print_agenda_items' % (self.context.uid), {})
+    type_name = 'Meeting'
+    schema_name = 'print_html'
+    buttons = (deform.Button('print', title=_("Create print view")), button_cancel)
 
     def nl2br(self, text):
         return unicode(nl2br(text))
 
-    def __call__(self):
+    def print_success(self, appstruct):
         printable_css.need()
-        settings = self.settings
-        if not settings:
-            self.flash_messages.add(_("Pick what to print"))
-            return HTTPFound(location = self.request.resource_url(self.context, 'print_meeting_structure_form'))
-        response = dict(settings)
-        response['agenda_items'] = self.get_agenda_items()
+        response = {}
+        response['agenda_items'] = self.get_agenda_items(appstruct['agenda_items'])
         response['proposal_state_titles'] = dict(proposal_states(self.request))
-        response['no_userid'] = settings['no_userid']
-        return response
+        response['no_userid'] = appstruct['no_userid']
+        response['include_ai_body'] = appstruct['include_ai_body']
+        response['include_proposal_states'] = appstruct['include_proposal_states']
+        response['include_discussion'] = appstruct['include_discussion']
+        response['view'] = self
+        return Response(
+            render('voteit.printable:templates/meeting_structure.pt',
+                   response, request=self.request)
+        )
 
-    def get_agenda_items(self):
+    def get_agenda_items(self, ai_names):
         agenda_items = []
-        ai_names = self.settings.get('agenda_items', ())
         for name in self.context.keys():
             if name in ai_names:
                 obj = self.context.get(name, None)
@@ -84,22 +70,25 @@ class DefaultPrintMeeting(BaseView):
         return tuple(self.catalog_query(query, resolve=True, sort_index='created'))
 
 
-class XMLExportMeetingView(DefaultPrintMeeting):
+class XMLExportMeetingView(HTMLPrintMeetingForm):
     title = _("XML export")
+    schema_name = 'print_xml'
+    no_userid = None
 
     @reify
     def unescape(self):
         parser = HTMLParser()
         return parser.unescape
 
-    def __call__(self):
-        values = super(XMLExportMeetingView, self).__call__()
-        if isinstance(values, HTTPException):
-            raise values
-        output = self.export_xml(values)
-        #Kill all output from fanstatic
+    def print_success(self, appstruct):
+        response = {}
+        response['agenda_items'] = self.get_agenda_items(appstruct['agenda_items'])
+        response['proposal_state_titles'] = dict(proposal_states(self.request))
+        self.no_userid = response['no_userid'] = appstruct['no_userid']
+        output = self.export_xml(response, appstruct)
+        # Kill all output from fanstatic
         clear_needed()
-        return Response(output, content_type = 'text/xml')
+        return Response(output, content_type='text/xml')
 
     def cleanup(self, text, html=True, trim=True):
         if html:
@@ -110,10 +99,10 @@ class XMLExportMeetingView(DefaultPrintMeeting):
         return text
 
     def _creators_info(self, creator):
-        return self.request.creators_info(creator, portrait = False, no_tag = True,
-                                          no_userid=self.settings['no_userid']).strip()
+        return self.request.creators_info(creator, portrait=False, no_tag=True,
+                                          no_userid=self.no_userid).strip()
 
-    def export_xml(self, values):
+    def export_xml(self, values, appstruct):
         proposal_state_titles = values['proposal_state_titles']
         root = Element('Root')
         root.set('xmlns', 'http://voteit.se/printable')
@@ -125,30 +114,30 @@ class XMLExportMeetingView(DefaultPrintMeeting):
             body.text = self.cleanup(ai.body)
             hashtag = SubElement(ai_elem, 'AgendaItem_hashtag')
             hashtag.text = ai.hashtag
-            #Append motion information, if it was created from a motion
+            # Append motion information, if it was created from a motion
             self.append_motion_details(ai, ai_elem)
-            #Proposals
+            # Proposals
             proposals = SubElement(ai_elem, 'Proposals')
             for obj in self.get_proposals(ai):
                 proposal = SubElement(proposals, 'Proposal')
-                #Attributes
+                # Attributes
                 creator = SubElement(proposal, 'Proposal_creator')
                 creator.text = self._creators_info(obj.creator)
                 text = SubElement(proposal, 'Proposal_text')
                 text.text = obj.text
                 aid = SubElement(proposal, 'Proposal_aid')
-                if self.settings['hashtag_number_only']:
+                if appstruct['hashtag_number_only']:
                     aid.text = str(obj.aid_int)
                 else:
                     aid.text = obj.aid
                 state = SubElement(proposal, 'Proposal_state')
                 wf_state = obj.get_workflow_state()
                 state.text = proposal_state_titles.get(wf_state, wf_state)
-            #Discussion
+            # Discussion
             discussion_posts = SubElement(ai_elem, 'DiscussionPosts')
             for obj in self.get_discussion(ai):
                 discussion_post = SubElement(discussion_posts, 'DiscussionPost')
-                #Attributes
+                # Attributes
                 creator = SubElement(discussion_post, 'DiscussionPost_creator')
                 creator.text = self._creators_info(obj.creator)
                 text = SubElement(discussion_post, 'DiscussionPost_text')
@@ -158,8 +147,8 @@ class XMLExportMeetingView(DefaultPrintMeeting):
         return body
 
     def append_motion_details(self, ai, elem):
-        #Note, this may change in voteit.motion
-        #Keep track of those changes
+        # Note, this may change in voteit.motion
+        # Keep track of those changes
         if not getattr(ai, 'motion_uid', False):
             return
         motion = self.request.resolve_uid(ai.motion_uid)
@@ -174,37 +163,40 @@ class XMLExportMeetingView(DefaultPrintMeeting):
         endorsements_text = SubElement(elem, 'AgendaItem_endorsements_text')
         endorsements_text.text = self.cleanup(motion.endorsements_text)
 
-#FIXME:
-#class JSONPrintMeeting(DefaultPrintMeeting):
+
+# FIXME:
+# class JSONPrintMeeting(DefaultPrintMeeting):
 #    title = _("JSON export")
 
-
-@view_action('actions_menu', 'print_meeting_structure',
-             title=_("Print meeting"),
-             priority=30,
-             permission=MODERATE_MEETING)
-def print_meeting_structure_action(context, request, va, **kw):
-    if getattr(request, 'meeting', False):
-        return """<li><a href="%(url)s">%(title)s</a></li>""" % \
-               {'url': request.resource_url(request.meeting, 'print_meeting_structure_form'),
-                'title': request.localizer.translate(va.title)}
-
-
 def includeme(config):
-    config.add_view(PrintableMeetingForm,
-                    context = IMeeting,
-                    name = 'print_meeting_structure_form',
-                    permission = MODERATE_MEETING,
-                    renderer = 'arche:templates/form.pt')
-    config.add_view(DefaultPrintMeeting,
-                    context = IMeeting,
-                    name = 'print_meeting_structure',
-                    renderer = 'voteit.printable:templates/meeting_structure.pt',
-                    permission = MODERATE_MEETING)
-    config.add_view(XMLExportMeetingView,
-                    context = IMeeting,
-                    name = 'meeting_export.xml',
-                    permission = MODERATE_MEETING)
-    config.add_printable_view(DefaultPrintMeeting, 'print_meeting_structure')
-    config.add_printable_view(XMLExportMeetingView, 'meeting_export.xml')
-    config.scan(__name__)
+    config.add_view(
+        HTMLPrintMeetingForm,
+        context=IMeeting,
+        name='print_meeting_as_html',
+        permission=MODERATE_MEETING,
+        renderer='arche:templates/form.pt'
+    )
+    config.add_view(
+        XMLExportMeetingView,
+        context=IMeeting,
+        name='print_meeting_as_xml',
+        permission=MODERATE_MEETING,
+        renderer='arche:templates/form.pt'
+    )
+    config.add_view_action(
+        control_panel_category, 'control_panel', 'print_meeting',
+        panel_group='control_panel_print_meeting',
+        title=_("Print meeting")
+    )
+    config.add_view_action(
+        control_panel_link, 'control_panel_print_meeting', 'as_html',
+        panel_group='control_panel_print_meeting',
+        view_name='print_meeting_as_html',
+        title=_("As webpage")
+    )
+    config.add_view_action(
+        control_panel_link, 'control_panel_print_meeting', 'as_xml',
+        panel_group='control_panel_print_meeting',
+        view_name='print_meeting_as_xml',
+        title=_("As XML")
+    )

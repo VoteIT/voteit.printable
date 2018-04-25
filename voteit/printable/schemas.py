@@ -110,20 +110,20 @@ class PrintableMeetingSchema(colander.Schema):
         title=_("Hide userids?"),
         default=False,
     )
+
+
+class HTMLPrintSchema(PrintableMeetingSchema):
+    pass
+
+
+class XMLPrintSchema(PrintableMeetingSchema):
     hashtag_number_only = colander.SchemaNode(
         colander.Bool(),
-        title=_("Only show hashtag number (XML)?"),
+        title=_("Only show hashtag number?"),
         default=False,
-    )
-    renderer = colander.SchemaNode(
-        colander.String(),
-        title = _("View to render the result (advanced)"),
-        description = _("The default will produce a printable webpage."),
-        default = 'print_meeting_structure',
-        widget = printable_renderer_widget,
-        validator = printable_renderer_paths_validator,
     )
 
 
 def includeme(config):
-    pass
+    config.add_schema('Meeting', HTMLPrintSchema, 'print_html')
+    config.add_schema('Meeting', XMLPrintSchema, 'print_xml')
