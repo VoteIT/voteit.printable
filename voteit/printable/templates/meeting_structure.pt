@@ -32,10 +32,10 @@
         <small>(${len(proposals)})</small>
       </h2>
       <tal:iterate repeat="obj proposals">
-        <p>
+        <div>
           <i>${structure: request.creators_info(obj.creator, portrait = False, no_tag = True, no_userid=no_userid)}</i>
-          ${structure: view.nl2br(obj.text)}
-        </p>
+          ${structure: request.render_proposal_text(obj)}
+        </div>
         <p tal:define="wf_state obj.get_workflow_state()">#${obj.aid} &mdash;
           <span class="glyphicon glyphicon-${wf_state} text-${wf_state}"></span>
           <tal:ts replace="proposal_state_titles.get(wf_state, wf_state)" />
@@ -52,10 +52,10 @@
       <small>(${len(discussion)})</small>
     </h2>
     <tal:iterate repeat="obj discussion">
-      <p>
+      <div>
         <i>${structure: request.creators_info(obj.creator, portrait=False, no_tag=True, no_userid=no_userid)}</i>
         ${structure: view.nl2br(obj.text)}
-      </p>      
+      </div>
       <hr/>
     </tal:iterate>
   </tal:discussion>
