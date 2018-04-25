@@ -1,12 +1,12 @@
-# 
+#
 # SOME DESCRIPTIVE TITLE
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2018.
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2015-05-09 22:09+0200\n"
+"POT-Creation-Date: 2018-04-25 14:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,46 +14,74 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Lingua 3.9\n"
+"Generated-By: Lingua 4.13\n"
 
-#: ././voteit/printable/schemas.py:52
+#: ./voteit/printable/schemas.py:56 ./voteit/printable/views.py:189
 msgid "Print meeting"
 msgstr ""
 
-#: ././voteit/printable/schemas.py:54
+#: ./voteit/printable/schemas.py:59
 msgid "Select agenda items"
 msgstr ""
 
-#: ././voteit/printable/schemas.py:58
+#: ./voteit/printable/schemas.py:65
 msgid "Include agenda item body, if any?"
 msgstr ""
 
-#: ././voteit/printable/schemas.py:63
+#: ./voteit/printable/schemas.py:72
 msgid "Include these proposal states"
 msgstr ""
 
-#: ././voteit/printable/schemas.py:67
+#: ./voteit/printable/schemas.py:78
 msgid "Include discussion posts?"
 msgstr ""
 
-#: ././voteit/printable/views.py:20
+#: ./voteit/printable/schemas.py:82
+msgid "Show proposal states"
+msgstr ""
+
+#: ./voteit/printable/schemas.py:87
+msgid "Hide userids?"
+msgstr ""
+
+#: ./voteit/printable/schemas.py:99
+msgid "Only show hashtag number?"
+msgstr ""
+
+#: ./voteit/printable/views.py:28
+msgid "Printable HTML"
+msgstr ""
+
+#: ./voteit/printable/views.py:31
 msgid "Create print view"
 msgstr ""
 
-#: ././voteit/printable/templates/meeting_structure.pt:9
+#: ./voteit/printable/views.py:74
+msgid "XML export"
+msgstr ""
+
+#: ./voteit/printable/views.py:195
+msgid "As webpage"
+msgstr ""
+
+#: ./voteit/printable/views.py:201
+msgid "As XML"
+msgstr ""
+
+#: ./voteit/printable/templates/meeting_structure.pt:9
 msgid "${num} agenda items selected"
 msgstr ""
 
-#: ././voteit/printable/templates/meeting_structure.pt:13
+#: ./voteit/printable/templates/meeting_structure.pt:13
 msgid ""
 "Each agenda item will be printed on its own page. These controls won't be "
 "printed."
 msgstr ""
 
-#: ././voteit/printable/templates/meeting_structure.pt:31
+#: ./voteit/printable/templates/meeting_structure.pt:28
 msgid "Proposals:"
 msgstr ""
 
-#: ././voteit/printable/templates/meeting_structure.pt:56
+#: ./voteit/printable/templates/meeting_structure.pt:51
 msgid "Discussion"
 msgstr ""

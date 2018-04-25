@@ -25,7 +25,7 @@ from voteit.printable.schemas import proposal_states
 
 
 class HTMLPrintMeetingForm(BaseForm):
-    title = _("Printable HTML (default)")
+    title = _("Printable HTML")
     type_name = 'Meeting'
     schema_name = 'print_html'
     buttons = (deform.Button('print', title=_("Create print view")), button_cancel)

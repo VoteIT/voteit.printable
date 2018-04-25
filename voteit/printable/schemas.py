@@ -80,7 +80,6 @@ class PrintableMeetingSchema(colander.Schema):
     show_states = colander.SchemaNode(
         colander.Bool(),
         title=_("Show proposal states"),
-        description=_("If the used template supports this"),
         default=True,
     )
     no_userid = colander.SchemaNode(

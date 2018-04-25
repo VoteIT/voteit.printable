@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2015-05-09 22:09+0200\n"
-"PO-Revision-Date: 2015-05-09 22:09+0100\n"
+"POT-Creation-Date: 2018-04-25 14:21+0200\n"
+"PO-Revision-Date: 2018-04-25 14:21+0200\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: Swedish\n"
 "Language: sv\n"
@@ -15,31 +15,59 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Lingua 3.9\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.6.9\n"
+"X-Generator: Poedit 1.8.6\n"
 
-#: voteit/printable/schemas.py:52
+#: voteit/printable/schemas.py:56 voteit/printable/views.py:189
 msgid "Print meeting"
 msgstr "Skriv ut möte"
 
-#: voteit/printable/schemas.py:54
+#: voteit/printable/schemas.py:59
 msgid "Select agenda items"
 msgstr "Välj dagordningspunkter"
 
-#: voteit/printable/schemas.py:58
+#: voteit/printable/schemas.py:65
 msgid "Include agenda item body, if any?"
 msgstr "Ta med dagordningspunktens brödtext, om den finns?"
 
-#: voteit/printable/schemas.py:63
+#: voteit/printable/schemas.py:72
 msgid "Include these proposal states"
 msgstr "Ta med förslag i följande tillstånd"
 
-#: voteit/printable/schemas.py:67
+#: voteit/printable/schemas.py:78
 msgid "Include discussion posts?"
 msgstr "Ta med diskussioner?"
 
-#: voteit/printable/views.py:20
+#: voteit/printable/schemas.py:82
+msgid "Show proposal states"
+msgstr "Visa förslagens tillstånd"
+
+#: voteit/printable/schemas.py:87
+msgid "Hide userids?"
+msgstr "Göm användarIDn?"
+
+#: voteit/printable/schemas.py:99
+msgid "Only show hashtag number?"
+msgstr "Visa bara hashtaggens nummer?"
+
+#: voteit/printable/views.py:28
+msgid "Printable HTML"
+msgstr "Utskriftsvänlig HTML"
+
+#: voteit/printable/views.py:31
 msgid "Create print view"
 msgstr "Skapa printvy"
+
+#: voteit/printable/views.py:74
+msgid "XML export"
+msgstr "XML-export"
+
+#: voteit/printable/views.py:195
+msgid "As webpage"
+msgstr "Som webbsida"
+
+#: voteit/printable/views.py:201
+msgid "As XML"
+msgstr "Som XML"
 
 #: voteit/printable/templates/meeting_structure.pt:9
 msgid "${num} agenda items selected"
@@ -53,10 +81,10 @@ msgstr ""
 "Varje dagordningspunkt kommer skrivas ut på sin egen sida. De här "
 "kontrollerna kommer inte skrivas ut."
 
-#: voteit/printable/templates/meeting_structure.pt:31
+#: voteit/printable/templates/meeting_structure.pt:28
 msgid "Proposals:"
 msgstr "Förslag:"
 
-#: voteit/printable/templates/meeting_structure.pt:56
+#: voteit/printable/templates/meeting_structure.pt:51
 msgid "Discussion"
 msgstr "Diskussion"
