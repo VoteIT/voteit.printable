@@ -7,7 +7,6 @@ import deform
 
 from voteit.printable import _
 from voteit.core import _ as core_ts
-from voteit.printable.models import get_printable_views
 
 
 @colander.deferred
@@ -51,27 +50,6 @@ def include_proposal_states_widget(node, kw):
 def all_proposal_state_ids(node, kw):
     request = kw['request']
     return [x[0] for x in proposal_states(request)]
-
-
-@colander.deferred
-def printable_renderer_widget(node, kw):
-    request = kw['request']
-    values = []
-    for (k, v) in get_printable_views(request.registry).items():
-        title = getattr(v, 'title', v.__name__)
-        if isinstance(title, TranslationString):
-            title = request.localizer.translate(title)
-        values.append((k, title))
-    if len(values) == 1:
-        return deform.widget.HiddenWidget()
-    else:
-        return deform.widget.SelectWidget(values=values)
-
-
-@colander.deferred
-def printable_renderer_paths_validator(node, kw):
-    request = kw['request']
-    return colander.OneOf(list(get_printable_views(request.registry)))
 
 
 class PrintableMeetingSchema(colander.Schema):
