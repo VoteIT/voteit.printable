@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2018-04-25 14:21+0200\n"
-"PO-Revision-Date: 2018-04-25 14:21+0200\n"
+"POT-Creation-Date: 2018-04-26 13:58+0200\n"
+"PO-Revision-Date: 2018-04-26 13:59+0200\n"
 "Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
 "Language-Team: Swedish\n"
 "Language: sv\n"
@@ -15,57 +15,61 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Lingua 3.9\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.8.6\n"
+"X-Generator: Poedit 2.0.4\n"
 
-#: voteit/printable/schemas.py:56 voteit/printable/views.py:189
+#: voteit/printable/schemas.py:65 voteit/printable/views.py:197
 msgid "Print meeting"
 msgstr "Skriv ut möte"
 
-#: voteit/printable/schemas.py:59
+#: voteit/printable/schemas.py:68
 msgid "Select agenda items"
 msgstr "Välj dagordningspunkter"
 
-#: voteit/printable/schemas.py:65
+#: voteit/printable/schemas.py:74
 msgid "Include agenda item body, if any?"
 msgstr "Ta med dagordningspunktens brödtext, om den finns?"
 
-#: voteit/printable/schemas.py:72
+#: voteit/printable/schemas.py:81
 msgid "Include these proposal states"
 msgstr "Ta med förslag i följande tillstånd"
 
-#: voteit/printable/schemas.py:78
+#: voteit/printable/schemas.py:87
 msgid "Include discussion posts?"
 msgstr "Ta med diskussioner?"
 
-#: voteit/printable/schemas.py:82
+#: voteit/printable/schemas.py:91
+msgid "Limit discussion posts to system users?"
+msgstr "Begränsa diskussionsinlägg till systemanvändare?"
+
+#: voteit/printable/schemas.py:97
 msgid "Show proposal states"
 msgstr "Visa förslagens tillstånd"
 
-#: voteit/printable/schemas.py:87
+#: voteit/printable/schemas.py:102
 msgid "Hide userids?"
 msgstr "Göm användarIDn?"
 
-#: voteit/printable/schemas.py:99
+#: voteit/printable/schemas.py:114
 msgid "Only show hashtag number?"
 msgstr "Visa bara hashtaggens nummer?"
 
-#: voteit/printable/views.py:28
+#: voteit/printable/views.py:31
 msgid "Printable HTML"
 msgstr "Utskriftsvänlig HTML"
 
-#: voteit/printable/views.py:31
+#: voteit/printable/views.py:34
 msgid "Create print view"
 msgstr "Skapa printvy"
 
-#: voteit/printable/views.py:74
+#: voteit/printable/views.py:81
 msgid "XML export"
 msgstr "XML-export"
 
-#: voteit/printable/views.py:195
+#: voteit/printable/views.py:203
 msgid "As webpage"
 msgstr "Som webbsida"
 
-#: voteit/printable/views.py:201
+#: voteit/printable/views.py:209
 msgid "As XML"
 msgstr "Som XML"
 
