@@ -12,6 +12,9 @@ from pyramid.decorator import reify
 from pyramid.renderers import render
 from pyramid.response import Response
 from pyramid.traversal import resource_path
+from repoze.catalog.query import Eq
+from repoze.catalog.query import Any
+
 from voteit.core.models.interfaces import IMeeting
 from voteit.core.security import MODERATE_MEETING
 from voteit.core.views.control_panel import control_panel_category
@@ -29,6 +32,7 @@ class HTMLPrintMeetingForm(BaseForm):
     type_name = 'Meeting'
     schema_name = 'print_html'
     buttons = (deform.Button('print', title=_("Create print view")), button_cancel)
+    include_discussion_userids = ()
 
     def nl2br(self, text):
         return unicode(nl2br(text))
@@ -43,6 +47,7 @@ class HTMLPrintMeetingForm(BaseForm):
         response['include_proposal_states'] = appstruct['include_proposal_states']
         response['include_discussion'] = appstruct['include_discussion']
         response['view'] = self
+        self.include_discussion_userids = appstruct['include_discussion_userids']
         return Response(
             render('voteit.printable:templates/meeting_structure.pt',
                    response, request=self.request)
@@ -65,8 +70,10 @@ class HTMLPrintMeetingForm(BaseForm):
         return tuple(self.catalog_query(query, resolve=True, sort_index='created'))
 
     def get_discussion(self, ai):
-        query = "path == '%s' " % resource_path(ai)
-        query += "and type_name == 'DiscussionPost'"
+        query = Eq('path', resource_path(ai))
+        query &= Eq('type_name', 'DiscussionPost')
+        if self.include_discussion_userids:
+            query &= Any('creator', self.include_discussion_userids)
         return tuple(self.catalog_query(query, resolve=True, sort_index='created'))
 
 
@@ -84,6 +91,7 @@ class XMLExportMeetingView(HTMLPrintMeetingForm):
         response = {}
         response['agenda_items'] = self.get_agenda_items(appstruct['agenda_items'])
         response['proposal_state_titles'] = dict(proposal_states(self.request))
+        self.include_discussion_userids = appstruct['include_discussion_userids']
         self.no_userid = response['no_userid'] = appstruct['no_userid']
         output = self.export_xml(response, appstruct)
         # Kill all output from fanstatic

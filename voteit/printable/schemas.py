@@ -52,6 +52,15 @@ def all_proposal_state_ids(node, kw):
     return [x[0] for x in proposal_states(request)]
 
 
+@colander.deferred
+def system_users_widget(node, kw):
+    request = kw['request']
+    system_users = [(u, u) for u in request.meeting.system_userids]
+    if not system_users:
+        return deform.widget.HiddenWidget()
+    return deform.widget.CheckboxChoiceWidget(values=system_users)
+
+
 class PrintableMeetingSchema(colander.Schema):
     title = _("Print meeting")
     agenda_items = colander.SchemaNode(
@@ -76,6 +85,12 @@ class PrintableMeetingSchema(colander.Schema):
         colander.Bool(),
         default=False,
         title=_("Include discussion posts?"),
+    )
+    include_discussion_userids = colander.SchemaNode(
+        colander.Set(),
+        title=_("Limit discussion posts to system users?"),
+        widget=system_users_widget,
+        missing=(),
     )
     show_states = colander.SchemaNode(
         colander.Bool(),
