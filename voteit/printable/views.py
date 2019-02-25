@@ -46,6 +46,7 @@ class HTMLPrintMeetingForm(BaseForm):
         response['include_ai_body'] = appstruct['include_ai_body']
         response['include_proposal_states'] = appstruct['include_proposal_states']
         response['include_discussion'] = appstruct['include_discussion']
+        response['horizontal_separators'] = appstruct['horizontal_separators']
         response['view'] = self
         self.include_discussion_userids = appstruct['include_discussion_userids']
         return Response(

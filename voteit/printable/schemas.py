@@ -105,7 +105,11 @@ class PrintableMeetingSchema(colander.Schema):
 
 
 class HTMLPrintSchema(PrintableMeetingSchema):
-    pass
+    horizontal_separators = colander.SchemaNode(
+        colander.Bool(),
+        title=_("Show horizontal separators?"),
+        default=True,
+    )
 
 
 class XMLPrintSchema(PrintableMeetingSchema):
