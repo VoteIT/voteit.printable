@@ -34,7 +34,7 @@
       <tal:iterate repeat="obj proposals">
         <div>
           <i>${structure: request.creators_info(obj.creator, portrait = False, no_tag = True, no_userid=no_userid)}</i>
-          ${structure: request.render_proposal_text(obj, tag_func=lambda x:x)}
+          ${structure: request.render_proposal_text(obj, tag_func=lambda x:x, diff_brief=False)}
         </div>
         <p tal:define="wf_state obj.get_workflow_state()">#${obj.aid} &mdash;
           <span class="glyphicon glyphicon-${wf_state} text-${wf_state}"></span>
